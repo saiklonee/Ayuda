@@ -1,10 +1,13 @@
 import express from "express";
+import { signup, login, logout, me } from "../controllers/authController.js";
+import { requireAuth } from "../middleware/requireAuth.js";
+import { authLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
-// TODO: signup, login, logout, refresh — this is the highest-priority
-// slice to build next, since Post/Donation/Verification all depend on
-// having a User to attach to.
-router.get("/", (req, res) => res.json({ module: "auth", status: "scaffolded" }));
+router.post("/signup", authLimiter, signup);
+router.post("/login", authLimiter, login);
+router.post("/logout", logout);
+router.get("/me", requireAuth, me);
 
 export default router;
